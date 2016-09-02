@@ -1,119 +1,73 @@
 'use strict';
 
-var crypto = require('crypto');
+var chalk = require('chalk');
+var prompt = require('prompt');
+var Wallet = require('./wallet');
 
-var ethUtils = require('ethereumjs-util');
+var getChalk = function (type, msg) {
 
-var readline = require('readline-sync');
-
-var scrypt = require('scryptsy');
-
-var uuid = require('uuid');
-
-var passwordInput = readline.question('Enter password for key generation: ', {
-
-    hideEchoBack: true,
-
-});
-
-console.log('\n=============================================================');
-
-console.log('\n! DO NOT FORGET THIS PASSWORD !');
-
-console.log('\nGenerating Key, please standby.');
-
-console.log('\n=============================================================');
-
-var iv = crypto.randomBytes(16);
-
-var cipheralgo = 'aes-128-ctr';
-
-var kdf = 'scrypt';
-
-var kdfparams = {
-
-    dklen: 32,
-
-    salt: crypto.randomBytes(32).toString('hex'),
-
-    n: 262144,
-
-    r: 8,
-
-    p: 1
+    switch (type) {
+        case "alertText":
+            return chalk.bgRed.white(msg);
+            break;
+        case "infoText":
+            return chalk.bgBlack.green(msg);
+            break;
+    };
 
 };
 
-var derivedKey = scrypt(new Buffer(passwordInput), kdfparams.salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+var divider = getChalk('alertText', '====');
 
-var cipher = crypto.createCipheriv(cipheralgo, derivedKey.slice(0, 16), iv);
+console.log('\n' + getChalk('alertText', '! DO NOT FORGET THIS PASSWORD !'));
+console.log(getChalk('alertText', '! DO NOT FORGET THIS PASSWORD !'));
+console.log('\n');
 
-var ciphertext = Buffer.concat([cipher.update(derivedKey), cipher.final()]);
+prompt.message = getChalk('infoText', '');
 
-var mac = ethUtils.sha3(Buffer.concat([derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex')]));
+prompt.start();
 
-var encrypted = JSON.stringify({
+prompt.get([{
 
-    version: 3,
+    hidden: true,
+    required: true,
+    type: 'string',
+    name: 'password',
+    replace: '\u00A4',
+    pattern: /^.{9,200}$/,
+    message: 'Password must be > 9 characters',
+    description: getChalk('infoText', 'Password')
 
-    id: uuid.v4({
 
-        random: crypto.randomBytes(16)
+}], function (err, result) {
 
-    }),
+    var myWallet = Wallet.generate();
+    var myV3 = myWallet.toV3String(result.password);
+    var myPrivateKey = myWallet.getPrivateKeyString();
+    var myPublicKey = myWallet.getPublicKeyString();
+    var myAddress = myWallet.getAddressString();
 
-    address: ethUtils.privateToAddress(derivedKey).toString('hex'),
-
-    Crypto: {
-
-        ciphertext: ciphertext.toString('hex'),
-
-        cipherparams: {
-
-            iv: iv.toString('hex')
-
-        },
-
-        cipher: cipheralgo,
-
-        kdf: kdf,
-
-        kdfparams: kdfparams,
-
-        mac: mac.toString('hex')
-
-    }
+    console.log('\n' + divider + getChalk('infoText', 'WALLET KEYS') + divider);
+    console.log('\n' + getChalk('infoText', 'Geth Encrypted Private Key') + ' ' + myV3);
+    console.log(getChalk('infoText', 'Private Key') + ' ' + myPrivateKey);
+    console.log(getChalk('infoText', 'Public Key') + ' ' + myPublicKey);
+    console.log(getChalk('infoText', 'Address') + ' ' +  myAddress);
+    console.log('\n' + divider + getChalk('infoText', 'IMPORT WALLET') + divider);
+    console.log('\n' + getChalk('infoText', 'Geth Encrypted Private Key'));
+    console.log('\n    Save to a file inside ' + getChalk('infoText', 'DATADIR/keystore/'));
+    console.log('\n        DATADIR is where your geth is configured to store data.');
+    console.log('        See: https://github.com/ethereumproject/go-ethereum/wiki/Backup-&-restore');
+    console.log('\n    Unlock with the password you entered above using ' + getChalk('infoText', 'geth --unlock ' + myAddress.substr(2) + ' console'));
+    console.log('\n' + getChalk('infoText', 'Private Key'));
+    console.log('\n    Save to a file and run ' + getChalk('infoText', 'geth account import filename'));
+    console.log('\n        You should DELETE this file after successful import!');
+    console.log('\n' + divider + getChalk('infoText', 'WARNING') + divider);
+    console.log('\n' + getChalk('alertText', '!!! BEFORE SENDING TOKENS TO WALLET, VERIFY IT UNLOCKS !!!'));
+    console.log('\nYou have been warned.  The creator of this software accepts NO RESPONSIBILITY.');
+    console.log('\nBy using the data above, you agree that YOU ARE RESPONSIBLE for anything that happens.');
+    console.log('\n' + divider + getChalk('infoText', 'DONATION INFORMATION') + divider);
+    console.log('\n          ' + getChalk('infoText', 'ETC') + ' 2999ed06ee503402c5a0b57143d709cfae9ce695');
+    console.log('          ' + getChalk('infoText', 'ETH') + ' 7e0e7e1a4aaf80db1e72528e29c72cd8b36a66de');
+    console.log('          ' + getChalk('infoText', 'BTC') + ' 1FpxPPXXonXudUbid1GbXmBuhBoRQU7agT\n');
 
 });
-
-var publicKey = ethUtils.privateToPublic(derivedKey).toString('hex');
-
-var address = ethUtils.privateToAddress(derivedKey).toString('hex');
-
-console.log('\nGeth/Mist Encrypted Format: ' + encrypted);
-
-console.log('\nEthereum Private Key: ' + derivedKey.toString('hex'));
-
-console.log('\nEthereum Public Key: ' + publicKey.toString('hex'));
-
-console.log('\nEthereum Address: ' + address);
-
-console.log('\n=============================================================');
-
-console.log('\nEncrypted Format: save to a file inside <DATADIR>/keystore');
-
-console.log('\n    To unlock use the password you entered above.');
-
-console.log('\n! BEFORE SENDING LARGE AMOUNTS OF TOKENS VERIFY IT UNLOCKS !');
-
-console.log('\nPrivate Key: save to a file and run: geth account import file');
-
-console.log('\n=============================================================');
-
-console.log('\nDonations --> ETC: 2999ed06ee503402c5a0b57143d709cfae9ce695');
-
-console.log('\n          --> ETH: 7e0e7e1a4aaf80db1e72528e29c72cd8b36a66de');
-
-console.log('\n          --> BTC: 1FpxPPXXonXudUbid1GbXmBuhBoRQU7agT');
-
-console.log('\n=============================================================');
