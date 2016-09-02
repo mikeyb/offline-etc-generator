@@ -1,37 +1,41 @@
 {
-  "name": "offline-etc-generator",
-  "version": "1.0.0",
-  "description": "Generate an Ethereum private/public key and corresponding address",
-  "main": "",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mikeyb/offline-etc-generator.git"
-  },
-  "keywords": [
-    "classic",
-    "ethereum",
-	"immutable",
-	"original",
-    "utilties",
-    "wallet"
-  ],
-  "author": "github@mikes.email",
-  "contributors": [
-    ""
-  ],
-  "license": "",
-  "bugs": {
-    "url": "https://github.com/mikeyb/offline-etc-generator/issues"
-  },
-  "homepage": "https://github.com/mikeyb/offline-etc-generator",
-  "dependencies": {
-    "ethereumjs-util": "^4.5.0",
-    "bn.js": "^4.8.0",
-    "create-hash": "^1.1.2",
-    "keccakjs": "^0.2.0",
-    "rlp": "^2.0.0",
-    "secp256k1": "^3.0.1"
-  },
-  "devDependencies": {
-  }
+    "name": "offline-etc-generator",
+    "version": "1.1.0",
+    "description": "Generate an Ethereum private/public key and corresponding address",
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mikeyb/offline-etc-generator.git"
+    },
+    "keywords": [
+        "classic",
+        "ethereum",
+        "immutable",
+        "original",
+        "utilties",
+        "wallet"
+    ],
+    "author": "Mike Boremi <mike@mikes.email>",
+    "contributors": [{
+        "name": "Seth",
+        "github": "https://github.com/sethfork"
+    }],
+    "license": "MIT License",
+    "bugs": {
+        "url": "https://github.com/mikeyb/offline-etc-generator/issues"
+    },
+    "homepage": "https://github.com/mikeyb/offline-etc-generator",
+    "dependencies": {
+        "ethereumjs-util": "^4.5.0",
+        "bn.js": "^4.8.0",
+        "create-hash": "^1.1.2",
+        "keccakjs": "^0.2.0",
+        "rlp": "^2.0.0",
+        "secp256k1": "^3.0.1",
+        "readline-sync": "^1.4.4",
+        "uuid": "^2.0.2",
+        "scryptsy": "^2.0.0"
+    },
+    "devDependencies": {
+    }
 }
