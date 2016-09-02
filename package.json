@@ -1,6 +1,6 @@
 {
     "name": "offline-etc-generator",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Generate an Ethereum private/public key and corresponding address",
     "main": "",
     "repository": {
