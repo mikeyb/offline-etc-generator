@@ -16,12 +16,12 @@ npm install
 
 ## Usage
 
-`nodejs generate.js`
+`node generate.js`
 
 ## Example
 
 ```
-$ nodejs generate.js
+$ node generate.js
 
 Ethereum Private Key: 648f5e1bac524a2a899e203189b9885184d79c3de3a12398d83e9d8a0351e0f3
 
