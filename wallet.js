@@ -2,7 +2,6 @@
 
 var crypto = require('crypto');
 var ethUtils = require('ethereumjs-util');
-var scrypt = require('scryptsy');
 var uuid = require('uuid');
 
 var Wallet = function(pk) {
@@ -53,7 +52,7 @@ Wallet.prototype.toV3 = function(password) {
 	var kdfparams = {
         dklen: 32,
         salt: salt.toString('hex'),
-        c: 262144,
+        c: 1048576,
         prf: 'hmac-sha256'
 	};
     var derivedKey = crypto.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
