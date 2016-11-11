@@ -29,8 +29,6 @@ prompt.get([{
 
         var vanityLength = result.addressString.length;
 
-        attempts++;
-
         if (myAddress.substr(0,vanityLength) == result.addressString) {
 
             console.log('\nVanity Address Found: ' + myAddress);
@@ -40,12 +38,6 @@ prompt.get([{
             break;
 
         };
-
-        if (attempts > 1000000) {
-
-            break;
-
-        }
 
     };
 
