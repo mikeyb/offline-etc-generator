@@ -16,7 +16,11 @@ npm install
 
 ## Usage
 
+#### Generate random keys
 `node generate`
+
+#### Generate vanity address
+`node vanity`
 
 ## Example
 
