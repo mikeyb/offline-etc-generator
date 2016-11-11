@@ -31,7 +31,7 @@ prompt.get([{
 
         if (myAddress.substr(0,vanityLength) == result.addressString) {
 
-            console.log('\nVanity Address Found: ' + myAddress);
+            console.log('\nVanity Address Found: 0x' + myAddress);
 
             console.log('Vanity Key: ' + myWallet.getPrivateKeyString());
 
